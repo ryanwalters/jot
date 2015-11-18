@@ -1,6 +1,6 @@
 # jot
 
-[hapi](http://hapijs.com/) JSON Web Token (JWT) authentication plugin
+[__hapi__](http://hapijs.com/) JSON Web Token (JWT) authentication plugin
 
 [Description]
 
