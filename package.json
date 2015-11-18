@@ -1,5 +1,5 @@
 {
-  "name": "hapi-jwt",
+  "name": "jot",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -10,6 +10,7 @@
     "node": ">=4.0.0"
   },
   "keywords": [
+    "jot",
     "hapi",
     "hapijs",
     "jwt",
