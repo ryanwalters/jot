@@ -1,0 +1,33 @@
+{
+  "name": "hapi-jwt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "keywords": [
+    "hapi",
+    "hapijs",
+    "jwt",
+    "json web tokens",
+    "auth",
+    "authentication"
+  ],
+  "author": "Ryan Walters",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "boom": "^3.0.0",
+    "hoek": "^3.0.4",
+    "joi": "^7.0.0",
+    "jsonwebtoken": "^5.4.1"
+  },
+  "devDependencies": {
+    "code": "^2.0.1",
+    "hapi": "^11.1.1",
+    "lab": "^7.3.0"
+  }
+}
