@@ -6,7 +6,6 @@ const Code = require('code');
 const Hapi = require('hapi');
 const Jwt = require('jsonwebtoken');
 const Lab = require('lab');
-const Yar = require('yar');
 
 
 // Test shortcuts
@@ -138,7 +137,7 @@ describe('Jot', () => {
         });
     });
 
-    it('authenticates a request token is passed in a cookie', (done) => {
+    it('authenticates a request token is stored in a cookie', (done) => {
 
         const server = new Hapi.Server();
 
@@ -147,23 +146,36 @@ describe('Jot', () => {
 
             expect(err).to.not.exist();
 
-            const cookie = 'cookie';
-            const secret = 'SuperSecret!';
+            const cookieName = 'cookie';
+            const secret = 'JwtSecret!';
 
             server.auth.strategy('jwt', 'jwt', {
-                cookie: cookie,
+                cookie: cookieName,
                 secret: secret
             });
 
             server.auth.strategy('session', 'cookie', {
-                cookie: cookie,
-            })
+                cookie: cookieName,
+                password: 'CookiePassword!'
+            });
 
             server.route([{
                 method: 'GET', path: '/login',
-                handler: (request, reply) => {
+                config: {
+                    auth: {
+                        mode: 'try',
+                        strategy: 'session'
+                    },
+                    handler: (request, reply) => {
 
-                    return reply('ok');
+                        request.auth.session.set({
+                            token: Jwt.sign({
+                                aud: 'user'
+                            }, secret)
+                        });
+
+                        return reply('ok');
+                    }
                 }
             }, {
                 method: 'GET', path: '/secure',
@@ -180,7 +192,13 @@ describe('Jot', () => {
 
                 expect(res.statusCode).to.equal(200);
 
-                server.inject({ method: 'GET', url: '/secure' }, (res2) => {
+                const header = res.headers['set-cookie'];
+
+                expect(header.length).to.equal(1);
+
+                const cookie = header[0].match(/(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/);
+
+                server.inject({ method: 'GET', url: '/secure', headers: { cookie: cookie[0] } }, (res2) => {
 
                     expect(res2.statusCode).to.equal(200);
                     done();
