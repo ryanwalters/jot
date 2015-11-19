@@ -2,6 +2,8 @@
 
 [__hapi__](http://hapijs.com/) JSON Web Token (JWT) authentication plugin
 
+[![Build Status](https://travis-ci.org/ryanwalters/jot.svg?branch=master)](https://travis-ci.org/ryanwalters/jot) [![Coverage Status](https://coveralls.io/repos/ryanwalters/jot/badge.svg?branch=master&service=github)](https://coveralls.io/github/ryanwalters/jot?branch=master)
+
 [Description]
 
 The `'jwt'` scheme takes the following required options:
