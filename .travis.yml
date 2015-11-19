@@ -4,6 +4,5 @@ node_js:
   - 4.2.2
   - 5.1
 
-script:
-  - npm test
-  - npm coveralls
+after_script:
+  - npm run coveralls
