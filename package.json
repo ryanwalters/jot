@@ -4,7 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "test": "lab -a code -t 100 -L"
+    "test": "lab -a code -t 100 -L",
+    "coveralls": "lab -r lcov | ./node_modules/.bin/coveralls"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -19,6 +20,7 @@
     "authentication"
   ],
   "author": "Ryan Walters",
+  "repository": "https://github.com/ryanwalters/jot",
   "license": "BSD-3-Clause",
   "dependencies": {
     "boom": "^3.0.0",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "code": "^2.0.1",
+    "coveralls": "^2.11.4",
     "hapi": "^11.1.1",
     "hapi-auth-cookie": "^3.1.0",
     "lab": "^7.3.0"
