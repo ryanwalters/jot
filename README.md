@@ -15,4 +15,43 @@ Must set JWT when the cookie is set. See examples below.
 
 _Note:_ Storing the JWT in a cookie is __optional__. You can always send the JWT in an `authentication` header.
 
-[Code examples]
+    const Hapi = require('hapi');
+    const Jwt = require('jsonwebtoken');
+
+    const server = new Hapi.Server();
+
+    server.connection({ port: 5000 });
+
+
+    // When using an 'Authentication' header
+
+    server.register(require('jot'), (err) => {
+
+        server.auth.strategy('jwt', 'jwt', {
+            secret: process.env.SECRET_PASSWORD // required!
+        });
+
+
+        // First, retrieve a token after the user logs in.
+
+        server.route({
+            method: 'GET',
+            path: '/login',
+            handler: (request, reply) => {
+
+                verifyTheUser(...)
+                    .then((err, user) => {
+
+                        return reply(Jwt.sign({
+                            aud: user.email,
+                            exp: 1447913572248
+                            scope: ['lions', 'tigers', 'bears']
+                        }));
+                    });
+            }
+        });
+    });
+
+    // To be continued...
+
+
