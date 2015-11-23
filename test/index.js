@@ -16,6 +16,9 @@ const it = lab.it;
 const expect = Code.expect;
 
 
+// Todo: add test cases for: tampering with payload, fail when alg different than options.alg, fail when date.now is < nbf
+
+
 describe('Jot', () => {
 
     it('fails with no options', (done) => {
@@ -49,7 +52,7 @@ describe('Jot', () => {
 
                 server.auth.strategy('jwt', 'jwt', {
                     cookie: 'test',
-                    token: 'fancy-token'
+                    token: 'fancyToken'
                 });
             }).to.throw(Error);
 

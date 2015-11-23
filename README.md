@@ -6,7 +6,7 @@
 
 [Description]
 
-The `'jwt'` scheme takes the following required options:
+The `'jwt'` scheme takes the following options:
 
 * `secret` - __(required)__ _{string}_ secret key used to compute the signature.
 * `cookie` - __(optional)__ _{string}_ cookie name. Defaults to `sid`. Works in tandem with [`hapi-auth-cookie`](https://github.com/hapijs/hapi-auth-cookie).
