@@ -9,6 +9,7 @@
 The `'jwt'` scheme takes the following options:
 
 * `secret` - __(required)__ _{string}_ secret key used to compute the signature.
+* `algorithms` - __(optional)__ _{string, array}_ algorithm(s) to verify tokens. Defaults to `HS256`.
 * `cookie` - __(optional)__ _{string}_ cookie name. Defaults to `sid`. Works in tandem with [`hapi-auth-cookie`](https://github.com/hapijs/hapi-auth-cookie).
 Must set JWT when the cookie is set. See examples below.
 * `token` - __(optional)__ _{string}_ name of the token set in the cookie. Defaults to `token`.
