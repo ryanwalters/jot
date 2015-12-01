@@ -16,9 +16,6 @@ const it = lab.it;
 const expect = Code.expect;
 
 
-// Todo: add test cases for: tampering with payload, fail when alg different than options.alg, fail when date.now is < nbf
-
-
 describe('Jot', () => {
 
     it('fails with no options', (done) => {
@@ -295,6 +292,84 @@ describe('Jot', () => {
 
             const jwt = Jwt.sign({
                 exp: Math.floor(Date.now() / 1000)
+            }, secret);
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.statusCode).to.equal(401);
+                done();
+            }), 1000);
+        });
+    });
+
+    it('fails authentication when wrong algorithm is used to sign the token', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                algorithms: ['HS256'],
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'AwesomeUser'
+            }, secret, { algorithm: 'HS384' });
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.statusCode).to.equal(401);
+                done();
+            }), 1000);
+        });
+    });
+
+    it('fails authentication when current time is before the not-before time', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'AwesomeUser',
+                nbf: (+new Date(2100, 1, 1) / 1000)
             }, secret);
 
             server.route({
