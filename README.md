@@ -14,7 +14,7 @@ The `'jwt'` scheme takes the following options:
 Must set JWT when the cookie is set. See examples below.
 * `token` - __(optional)__ _{string}_ name of the token set in the cookie. Defaults to `token`.
 
-_Note:_ Storing the JWT in a cookie is __optional__. You can always send the JWT in an `authentication` header.
+_Note:_ Storing the JWT in a cookie is __optional__. You can always send the JWT in an `Authorization` header.
 
     const Hapi = require('hapi');
     const Jwt = require('jsonwebtoken');
