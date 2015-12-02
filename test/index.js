@@ -291,8 +291,10 @@ describe('Jot', () => {
             });
 
             const jwt = Jwt.sign({
-                exp: Math.floor(Date.now() / 1000)
-            }, secret);
+                aud: 'AwesomeUser'
+            }, secret, {
+                expiresIn: -1000
+            });
 
             server.route({
                 method: 'GET', path: '/secure',
@@ -331,7 +333,9 @@ describe('Jot', () => {
 
             const jwt = Jwt.sign({
                 aud: 'AwesomeUser'
-            }, secret, { algorithm: 'HS384' });
+            }, secret, {
+                algorithm: 'HS384'
+            });
 
             server.route({
                 method: 'GET', path: '/secure',
