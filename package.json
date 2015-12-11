@@ -26,7 +26,8 @@
     "boom": "^3.0.0",
     "hoek": "^3.0.4",
     "joi": "^7.0.0",
-    "jsonwebtoken": "^5.4.1"
+    "jsonwebtoken": "^5.4.1",
+    "lab": "^8.0.0"
   },
   "devDependencies": {
     "code": "^2.0.1",
