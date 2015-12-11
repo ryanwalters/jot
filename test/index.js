@@ -2,6 +2,7 @@
 
 // Load modules
 
+const Boom = require('boom');
 const Code = require('code');
 const Hapi = require('hapi');
 const Jwt = require('jsonwebtoken');
@@ -18,7 +19,7 @@ const expect = Code.expect;
 
 describe('Jot', () => {
 
-    it('fails with no options', (done) => {
+    it('fails initialization with no options', (done) => {
 
         const server = new Hapi.Server();
 
@@ -36,7 +37,7 @@ describe('Jot', () => {
         });
     });
 
-    it('fails with no secret defined', (done) => {
+    it('fails initialization with no secret defined', (done) => {
 
         const server = new Hapi.Server();
 
@@ -57,7 +58,7 @@ describe('Jot', () => {
         });
     });
 
-    it('fails with invalid options', (done) => {
+    it('fails initialization with invalid options', (done) => {
 
         const server = new Hapi.Server();
 
@@ -79,7 +80,7 @@ describe('Jot', () => {
         });
     });
 
-    it('passes with secret defined', (done) => {
+    it('initializes with secret defined', (done) => {
 
         const server = new Hapi.Server();
 
@@ -131,6 +132,7 @@ describe('Jot', () => {
 
             server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(true);
                 expect(res.statusCode).to.equal(200);
                 done();
             });
@@ -200,6 +202,7 @@ describe('Jot', () => {
 
                 server.inject({ method: 'GET', url: '/secure', headers: { cookie: cookie[0] } }, (res2) => {
 
+                    expect(res2.request.auth.isAuthenticated).to.equal(true);
                     expect(res2.statusCode).to.equal(200);
                     done();
                 });
@@ -233,6 +236,7 @@ describe('Jot', () => {
 
             server.inject({ method: 'GET', url: '/secure' }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(false);
                 expect(res.statusCode).to.equal(401);
                 done();
             });
@@ -269,6 +273,7 @@ describe('Jot', () => {
 
             server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(false);
                 expect(res.statusCode).to.equal(401);
                 done();
             });
@@ -309,6 +314,7 @@ describe('Jot', () => {
 
             setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(false);
                 expect(res.statusCode).to.equal(401);
                 done();
             }), 1000);
@@ -350,6 +356,7 @@ describe('Jot', () => {
 
             setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(false);
                 expect(res.statusCode).to.equal(401);
                 done();
             }), 1000);
@@ -389,9 +396,184 @@ describe('Jot', () => {
 
             setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
 
+                expect(res.request.auth.isAuthenticated).to.equal(false);
                 expect(res.statusCode).to.equal(401);
                 done();
             }), 1000);
+        });
+    });
+
+    it('fails authentication when validation function has an error', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                secret: secret,
+                validateFunc: (request, token, callback) => {
+
+                    const error = Boom.badRequest('wah wah');
+
+                    callback(error, false);
+                }
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'user'
+            }, secret);
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(false);
+                expect(res.statusCode).to.equal(401);
+                done();
+            });
+        });
+    });
+
+    it('fails authentication when token is invalid', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                secret: secret,
+                validateFunc: (request, token, callback) => {
+
+                    return callback(null, false);
+                }
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'user'
+            }, secret);
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(false);
+                expect(res.statusCode).to.equal(401);
+                done();
+            });
+        });
+    });
+
+    it('authenticates when token is valid', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                secret: secret,
+                validateFunc: (request, token, callback) => {
+
+                    return callback(null, true);
+                }
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'user'
+            }, secret);
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(true);
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
+
+    it('authenticates when token is valid and credentials are updated', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                secret: secret,
+                validateFunc: (request, token, callback) => {
+
+                    return callback(null, true, { aud: 'updatedUser' });
+                }
+            });
+
+            const jwt = Jwt.sign({
+                aud: 'user'
+            }, secret);
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(true);
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
         });
     });
 });

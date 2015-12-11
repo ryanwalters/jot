@@ -11,6 +11,7 @@ The `'jwt'` scheme takes the following options:
 * `cookie` - __(optional)__ _{string}_ cookie name. Defaults to `sid`. Works in tandem with [`hapi-auth-cookie`](https://github.com/hapijs/hapi-auth-cookie).
 Must set JWT when the cookie is set. See examples below.
 * `token` - __(optional)__ _{string}_ name of the token set in the cookie. Defaults to `token`.
+* `validateFunc` - __(optional)__ _{function}_ function to validate the decoded token on every request.
 
 _Note:_ Storing the JWT in a cookie is __optional__. You can always send the JWT in an `Authorization` header.
 
