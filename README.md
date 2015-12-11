@@ -23,7 +23,7 @@ _Note:_ Storing the JWT in a cookie is __optional__. You can always send the JWT
     server.connection({ port: 5000 });
 
 
-    // When using an 'Authentication' header
+    // When using an 'Authorization' header
 
     server.register(require('jot'), (err) => {
 
