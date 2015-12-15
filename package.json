@@ -8,7 +8,7 @@
     "coveralls": "lab -r lcov | ./node_modules/.bin/coveralls"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=4.2.2"
   },
   "keywords": [
     "jot",
