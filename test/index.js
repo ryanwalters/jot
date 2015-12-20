@@ -403,6 +403,176 @@ describe('Jot', () => {
         });
     });
 
+    it('fails authentication when issuer claim fails verification', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                issuer: 'jot',
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                scope: 'admin'
+            }, secret, {
+                issuer: 'not jot'
+            });
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(false);
+                expect(res.statusCode).to.equal(401);
+                done();
+            }), 1000);
+        });
+    });
+
+    it('authenticates when issuer claim is valid', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+            const issuer = 'jot';
+
+            server.auth.strategy('jwt', 'jwt', {
+                issuer: issuer,
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                scope: 'admin'
+            }, secret, {
+                issuer: issuer
+            });
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(true);
+                expect(res.statusCode).to.equal(200);
+                done();
+            }), 1000);
+        });
+    });
+
+    it('fails authentication when audience claim fails verification', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+
+            server.auth.strategy('jwt', 'jwt', {
+                audience: 'jot',
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                scope: 'admin'
+            }, secret, {
+                audience: 'not jot'
+            });
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(false);
+                expect(res.statusCode).to.equal(401);
+                done();
+            }), 1000);
+        });
+    });
+
+    it('authenticates when issuer audience is valid', (done) => {
+
+        const server = new Hapi.Server();
+
+        server.connection();
+        server.register(require('../'), (err) => {
+
+            expect(err).to.not.exist();
+
+            const secret = 'SuperSecret!';
+            const audience = 'jot';
+
+            server.auth.strategy('jwt', 'jwt', {
+                audience: audience,
+                secret: secret
+            });
+
+            const jwt = Jwt.sign({
+                scope: 'admin'
+            }, secret, {
+                audience: audience
+            });
+
+            server.route({
+                method: 'GET', path: '/secure',
+                config: {
+                    auth: 'jwt',
+                    handler: (request, reply) => {
+
+                        return reply('ok');
+                    }
+                }
+            });
+
+            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                expect(res.request.auth.isAuthenticated).to.equal(true);
+                expect(res.statusCode).to.equal(200);
+                done();
+            }), 1000);
+        });
+    });
+
     it('fails authentication when validation function has an error', (done) => {
 
         const server = new Hapi.Server();
