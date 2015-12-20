@@ -415,14 +415,14 @@ describe('Jot', () => {
             const secret = 'SuperSecret!';
 
             server.auth.strategy('jwt', 'jwt', {
-                issuer: 'jot',
+                issuer: 123,
                 secret: secret
             });
 
             const jwt = Jwt.sign({
                 scope: 'admin'
             }, secret, {
-                issuer: 'not jot'
+                issuer: 'something else'
             });
 
             server.route({
@@ -455,7 +455,7 @@ describe('Jot', () => {
             expect(err).to.not.exist();
 
             const secret = 'SuperSecret!';
-            const issuer = 'jot';
+            const issuer = 'github.com';
 
             server.auth.strategy('jwt', 'jwt', {
                 issuer: issuer,
@@ -500,14 +500,14 @@ describe('Jot', () => {
             const secret = 'SuperSecret!';
 
             server.auth.strategy('jwt', 'jwt', {
-                audience: 'jot',
+                audience: 'github.com',
                 secret: secret
             });
 
             const jwt = Jwt.sign({
                 scope: 'admin'
             }, secret, {
-                audience: 'not jot'
+                audience: 'google.com'
             });
 
             server.route({
@@ -540,7 +540,7 @@ describe('Jot', () => {
             expect(err).to.not.exist();
 
             const secret = 'SuperSecret!';
-            const audience = 'jot';
+            const audience = 'github.com';
 
             server.auth.strategy('jwt', 'jwt', {
                 audience: audience,
