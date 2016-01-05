@@ -26,14 +26,13 @@
     "boom": "^3.0.0",
     "hoek": "^3.0.4",
     "joi": "^7.0.0",
-    "jsonwebtoken": "^5.4.1",
-    "lab": "^8.0.0"
+    "jsonwebtoken": "^5.4.4"
   },
   "devDependencies": {
     "code": "^2.0.1",
     "coveralls": "^2.11.4",
     "hapi": "^11.1.1",
     "hapi-auth-cookie": "^3.1.0",
-    "lab": "^7.3.0"
+    "lab": "^8.0.0"
   }
 }
