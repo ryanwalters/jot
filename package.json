@@ -1,6 +1,6 @@
 {
   "name": "jot",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "hapi JSON Web Token (JWT) authentication plugin",
   "main": "lib/index.js",
   "scripts": {
