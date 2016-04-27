@@ -158,7 +158,7 @@ describe('Jot', () => {
 
             server.auth.strategy('session', 'cookie', {
                 cookie: cookieName,
-                password: 'CookiePassword!'
+                password: 'HapiNowRequiresPasswordsAtLeast32Chars'
             });
 
             server.route([{
@@ -170,7 +170,7 @@ describe('Jot', () => {
                     },
                     handler: (request, reply) => {
 
-                        request.auth.session.set({
+                        request.cookieAuth.set({
                             token: Jwt.sign({
                                 aud: 'user'
                             }, secret)
@@ -312,12 +312,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(false);
-                expect(res.statusCode).to.equal(401);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(false);
+                    expect(res.statusCode).to.equal(401);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -354,12 +357,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(false);
-                expect(res.statusCode).to.equal(401);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(false);
+                    expect(res.statusCode).to.equal(401);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -394,12 +400,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(false);
-                expect(res.statusCode).to.equal(401);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(false);
+                    expect(res.statusCode).to.equal(401);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -415,7 +424,7 @@ describe('Jot', () => {
             const secret = 'SuperSecret!';
 
             server.auth.strategy('jwt', 'jwt', {
-                issuer: 123,
+                issuer: '123',
                 secret: secret
             });
 
@@ -436,12 +445,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(false);
-                expect(res.statusCode).to.equal(401);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(false);
+                    expect(res.statusCode).to.equal(401);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -479,12 +491,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(true);
-                expect(res.statusCode).to.equal(200);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(true);
+                    expect(res.statusCode).to.equal(200);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -521,12 +536,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(false);
-                expect(res.statusCode).to.equal(401);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(false);
+                    expect(res.statusCode).to.equal(401);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -564,12 +582,15 @@ describe('Jot', () => {
                 }
             });
 
-            setTimeout(server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+            setTimeout(() => {
 
-                expect(res.request.auth.isAuthenticated).to.equal(true);
-                expect(res.statusCode).to.equal(200);
-                done();
-            }), 1000);
+                server.inject({ method: 'GET', url: '/secure', headers: { 'Authorization': jwt } }, (res) => {
+
+                    expect(res.request.auth.isAuthenticated).to.equal(true);
+                    expect(res.statusCode).to.equal(200);
+                    done();
+                });
+            }, 1000);
         });
     });
 

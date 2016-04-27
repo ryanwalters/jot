@@ -23,16 +23,16 @@
   "repository": "https://github.com/ryanwalters/jot",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "boom": "^3.1.1",
-    "hoek": "^3.0.4",
-    "joi": "^7.1.0",
-    "jsonwebtoken": "^5.4.4"
+    "boom": "^3.1.2",
+    "hoek": "^4.0.0",
+    "joi": "^8.0.5",
+    "jsonwebtoken": "6.1.0"
   },
   "devDependencies": {
-    "code": "^2.1.0",
-    "coveralls": "^2.11.4",
-    "hapi": "^12.0.0",
-    "hapi-auth-cookie": "^4.0.0",
-    "lab": "^8.0.0"
+    "code": "^2.2.0",
+    "coveralls": "^2.11.9",
+    "hapi": "^13.3.0",
+    "hapi-auth-cookie": "^6.1.1",
+    "lab": "^10.3.2"
   }
 }

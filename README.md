@@ -11,7 +11,7 @@ The `'jwt'` scheme takes the following options:
 * `audience` - __(optional)__ _{string|integer}_ verify audience `(aud)` claim against this value
 * `cookie` - __(optional)__ _{string}_ cookie name. Defaults to `sid`. Works in tandem with [`hapi-auth-cookie`](https://github.com/hapijs/hapi-auth-cookie).
 Must set JWT when the cookie is set. See examples below.
-* `issuer` - __(optional)__ _{string|integer}_ verify issuer `(iss)` claim against this value
+* `issuer` - __(optional)__ _{string}_ verify issuer `(iss)` claim against this value
 * `token` - __(optional)__ _{string}_ name of the token set in the cookie. Defaults to `token`.
 * `validateFunc` - __(optional)__ _{function}_ function to validate the decoded token on every request.
 
